@@ -19,6 +19,7 @@ volcano_height = 73.8;
 e3dv6_height = 61.8;
 magmajhead_height = 58.8;
 blower_height = (hotend == "magmajhead" ? magmajhead_height : (hotend == "e3dv6" ? e3dv6_height : volcano_height));
+shift_blower = (fan_dim == 30 ? 0 : 7);
 
 // roundness option
 $fs=0.2; 
@@ -107,6 +108,7 @@ mirror([0,0,1]) { // reorient for placement
                             translate([0,0,4])
                                 roundcube([15,10,2], r=2, center=true);
                         }
+                        hull() 
                         for (i = [-1, 1])
                         hull() { 
                             roundcube([fan_dim,fan_dim,2], r=2, center=true);
@@ -117,9 +119,11 @@ mirror([0,0,1]) { // reorient for placement
                     }
                     hull () {
                         cylinder(d=fan_dim-5, h=2, center=true);
-                        translate([0,0,4])
+                        translate([0,0,3])
                             roundcube([12,8,2], r=0.5, center=true);
                     }
+                    translate([0,0,4])
+                        roundcube([12,8,2], r=0.5, center=true);
                     for (x = [-1, 1])
                         for (y = [-1, 1])
                             #translate([x*fan_hole_sep/2, y*fan_hole_sep/2,0])
@@ -134,7 +138,7 @@ mirror([0,0,1]) { // reorient for placement
         translate([0,0,5])
         difference() {
             blower(height=blower_height);
-            blower(true, height=blower_height-3.8);
+            blower(true, height=blower_height-3.8-shift_blower);
             translate([0,0,(30-fan_dim)/2])
             translate([-10,0,(blower_height-30.3)]) // cutout for the fan into the blower shaft. magic number 35.3 for 40mm fan, 30.3 for 30mm
                 rotate([90,0,0])
