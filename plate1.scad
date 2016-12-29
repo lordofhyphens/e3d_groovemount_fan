@@ -11,9 +11,10 @@ fan_dim = 30;
 
 volcano_height=73.8;
 e3dv6_height=61.8;
-hotend="volcano";
+magmajhead_height=58.8;
+hotend="magmajhead";
 
-blower_height=( hotend == "e3dv6" ? e3dv6_height : volcano_height);
+blower_height=(hotend == "magmajhead" ? magmajhead_height : (hotend == "e3dv6" ? e3dv6_height : volcano_height));
 
 // utility function, generates a cube with rounded edges on its xy.
 module roundcube(dims, r = 3, center = false)
@@ -67,6 +68,18 @@ mirror([0,0,1]) { // reorient for placement
             cylinder(d=12, h=5.6);
             translate([0,30,0])cylinder(d=12, h=5.6);
         }
+
+        if (hotend == "magmajhead") {
+            translate([0,0,-4.5])
+                #hull() {
+                    cylinder(d=17, h=5.6);
+                    translate([0,30,0])cylinder(d=12, h=5.6);
+                }
+            for (i=[-34/2, 34/2])
+            translate([i,0,3])
+            rotate([-90,0,0])#cylinder(d=3.3, h=25.6);
+        }
+
         for (i = [1, -1]) 
             translate([i*(55.80-35.80),0,0])
                 #hull() {
