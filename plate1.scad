@@ -1,21 +1,28 @@
-$fs=0.2; // roundness options
-$fa=0.1; // 
 // total height 69.21
 // to top of fins: 6.7mm + 5.6
 // to bottom of fins: 32mm + 5.6
 // to nozzle (volcano): 58.2mm + 5.6
 
 // set to your fan diameter and hole dimensions (relative from center of fan)
-fan_hole_sep = 24;
-fan_dim = 30;
 
-volcano_height=73.8;
-e3dv6_height=61.8;
-magmajhead_height=58.8;
-hotend="magmajhead";
+/* [Global] */
+// Fan size
+fan_dim = 40; // [first:30,second:40]
+// Hotend type
+hotend = "volcano"; // [first:e3dv6,second:volcano,third:magmajhead]
 
-blower_height=(hotend == "magmajhead" ? magmajhead_height : (hotend == "e3dv6" ? e3dv6_height : volcano_height));
 
+/* [Hidden] */
+
+fan_hole_sep = (fan_dim == 40 ? 32 : 24);
+volcano_height = 73.8;
+e3dv6_height = 61.8;
+magmajhead_height = 58.8;
+blower_height = (hotend == "magmajhead" ? magmajhead_height : (hotend == "e3dv6" ? e3dv6_height : volcano_height));
+
+// roundness option
+$fs=0.2; 
+$fa=0.1; 
 // utility function, generates a cube with rounded edges on its xy.
 module roundcube(dims, r = 3, center = false)
 {
@@ -73,7 +80,7 @@ mirror([0,0,1]) { // reorient for placement
             translate([0,0,-4.5])
                 #hull() {
                     cylinder(d=17, h=5.6);
-                    translate([0,30,0])cylinder(d=12, h=5.6);
+                    translate([0,30,0])cylinder(d=17, h=5.6);
                 }
             for (i=[-34/2, 34/2])
             translate([i,0,3])
@@ -100,9 +107,10 @@ mirror([0,0,1]) { // reorient for placement
                             translate([0,0,4])
                                 roundcube([15,10,2], r=2, center=true);
                         }
+                        for (i = [-1, 1])
                         hull() { 
                             roundcube([fan_dim,fan_dim,2], r=2, center=true);
-                            translate([0,(fan_dim/2)-(15/2),4])
+                            translate([0,i*((fan_dim/2)-(15/2)),4])
                                 roundcube([15,15,2], r=2, center=true);
                         }
 
